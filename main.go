@@ -9,6 +9,23 @@ import (
 	"strings"
 )
 
+type sqlString string
+
+func (s sqlString) rawSQL() sqlString {
+	return s
+}
+
+type sqlStatement interface {
+	rawSQL() sqlString
+}
+
+type insertStatement struct {
+	sqlString
+}
+type selectStatement struct {
+	sqlString
+}
+
 func main() {
 	for {
 		fmt.Print("db > ")
@@ -16,6 +33,12 @@ func main() {
 		if strings.HasPrefix(input, ".") {
 			if err := doMetaCmd(input); err != nil {
 				fmt.Println(err)
+			}
+		} else {
+			if _, err := prepareStatement(input); err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Println("TODO: execute statement")
 			}
 		}
 	}
@@ -39,4 +62,15 @@ func doMetaCmd(cmd string) error {
 		return errors.New("Unrecognized command")
 	}
 	return nil
+}
+
+func prepareStatement(input string) (sqlStatement, error) {
+	switch {
+	case strings.HasPrefix(input, "insert"):
+		return &insertStatement{sqlString(input)}, nil
+	case strings.HasPrefix(input, "select"):
+		return &selectStatement{sqlString(input)}, nil
+	default:
+		return nil, fmt.Errorf("Unrecognized statement: %v", input)
+	}
 }
