@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -12,12 +13,10 @@ func main() {
 	for {
 		fmt.Print("db > ")
 		input := readInput()
-
-		switch input {
-		case ".exit":
-			os.Exit(0)
-		default:
-			fmt.Printf("Unrecognized command '%s'.\n", input)
+		if strings.HasPrefix(input, ".") {
+			if err := doMetaCmd(input); err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 }
@@ -30,4 +29,14 @@ func readInput() string {
 	}
 
 	return strings.TrimSpace(text)
+}
+
+func doMetaCmd(cmd string) error {
+	switch cmd {
+	case ".exit":
+		os.Exit(0)
+	default:
+		return errors.New("Unrecognized command")
+	}
+	return nil
 }
