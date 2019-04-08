@@ -42,7 +42,6 @@ func main() {
 			if stmt, err := prepareStatement(input); err != nil {
 				fmt.Println(err)
 			} else {
-				fmt.Println(stmt.rawSQL())
 				if err := executeStatement(stmt); err != nil {
 					fmt.Println(err)
 				}
