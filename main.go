@@ -30,6 +30,10 @@ func main() {
 	for {
 		fmt.Print("db > ")
 		input := readInput()
+
+		if input == "" {
+			continue
+		}
 		if strings.HasPrefix(input, ".") {
 			if err := doMetaCmd(input); err != nil {
 				fmt.Println(err)
