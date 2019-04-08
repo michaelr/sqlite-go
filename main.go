@@ -11,12 +11,12 @@ import (
 
 type sqlString string
 
-func (s sqlString) rawSQL() sqlString {
-	return s
+func (s sqlString) rawSQL() string {
+	return string(s)
 }
 
 type sqlStatement interface {
-	rawSQL() sqlString
+	rawSQL() string
 }
 
 type insertStatement struct {
@@ -42,6 +42,7 @@ func main() {
 			if stmt, err := prepareStatement(input); err != nil {
 				fmt.Println(err)
 			} else {
+				fmt.Println(stmt.rawSQL())
 				if err := executeStatement(stmt); err != nil {
 					fmt.Println(err)
 				}
