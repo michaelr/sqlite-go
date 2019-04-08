@@ -35,10 +35,12 @@ func main() {
 				fmt.Println(err)
 			}
 		} else {
-			if _, err := prepareStatement(input); err != nil {
+			if stmt, err := prepareStatement(input); err != nil {
 				fmt.Println(err)
 			} else {
-				fmt.Println("TODO: execute statement")
+				if err := executeStatement(stmt); err != nil {
+					fmt.Println(err)
+				}
 			}
 		}
 	}
@@ -73,4 +75,16 @@ func prepareStatement(input string) (sqlStatement, error) {
 	default:
 		return nil, fmt.Errorf("Unrecognized statement: %v", input)
 	}
+}
+
+func executeStatement(statement sqlStatement) error {
+	switch statement.(type) {
+	case *insertStatement:
+		fmt.Println("TODO: execute insert")
+	case *selectStatement:
+		fmt.Println("TODO: execute select")
+	default:
+		return errors.New("Unknown statement type")
+	}
+	return nil
 }
