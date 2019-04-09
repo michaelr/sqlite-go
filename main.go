@@ -9,21 +9,20 @@ import (
 	"strings"
 )
 
-type sqlString string
+type rawSQL string
 
-func (s sqlString) rawSQL() string {
+func (s rawSQL) RawSQL() string {
 	return string(s)
 }
 
 type sqlStatement interface {
-	rawSQL() string
+	RawSQL() string
 }
-
 type insertStatement struct {
-	sqlString
+	rawSQL
 }
 type selectStatement struct {
-	sqlString
+	rawSQL
 }
 
 func main() {
@@ -73,9 +72,9 @@ func doMetaCmd(cmd string) error {
 func prepareStatement(input string) (sqlStatement, error) {
 	switch {
 	case strings.HasPrefix(input, "insert"):
-		return &insertStatement{sqlString(input)}, nil
+		return &insertStatement{rawSQL(input)}, nil
 	case strings.HasPrefix(input, "select"):
-		return &selectStatement{sqlString(input)}, nil
+		return &selectStatement{rawSQL(input)}, nil
 	default:
 		return nil, fmt.Errorf("Unrecognized statement: %v", input)
 	}
