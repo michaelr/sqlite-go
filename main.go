@@ -36,14 +36,15 @@ func main() {
 		fmt.Print("db > ")
 		input := readInput()
 
-		if input == "" {
+		switch {
+
+		case input == "":
 			continue
-		}
-		if strings.HasPrefix(input, ".") {
+		case strings.HasPrefix(input, "."):
 			if err := doMetaCmd(input); err != nil {
 				fmt.Println(err)
 			}
-		} else {
+		default:
 			if stmt, err := prepareStatement(input); err != nil {
 				fmt.Println(err)
 			} else {
